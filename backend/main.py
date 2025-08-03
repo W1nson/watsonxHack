@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from agent import run_agent
 
@@ -12,8 +13,8 @@ class ChatResponse(BaseModel):
 
 @app.post("/chat", response_model=ChatResponse)
 def chat_endpoint(req: ChatRequest):
-    result = run_agent(req.user_input)
-    return ChatResponse(response=result)
+    response = run_agent(req.user_input)
+    return StreamingResponse(response, media_type="text/plain")
 
 if __name__ == "__main__":
     import uvicorn
