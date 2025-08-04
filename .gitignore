@@ -104,3 +104,25 @@ cython_debug/
 # Environment variables
 .env
 .env.*
+
+# Xcode
+.DS_Store
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Swift Package Manager
+.swiftpm/xcode/package.xcworkspace/xcuserdata/
+
+# CocoaPods (if used)
+Pods/
+*.xcworkspace
+!Pods/.gitkeep
+
+# Carthage (if used)
+Carthage/Build/
+
+# Logs and temporary files
+*.log
+*.tmp
