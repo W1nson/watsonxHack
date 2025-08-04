@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CD6CC52C2E40A34D0086501A /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD6CC52B2E40A34D0086501A /* MarkdownUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		8475B17E2E3F62510085B4D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD6CC52C2E40A34D0086501A /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = iOS;
 			packageProductDependencies = (
+				CD6CC52B2E40A34D0086501A /* MarkdownUI */,
 			);
 			productName = iOS;
 			productReference = 8475B16D2E3F62500085B4D5 /* iOS.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 8475B1642E3F62500085B4D5;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CD06E33A2E40A0FB00DE2885 /* XCRemoteSwiftPackageReference "MarkdownUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8475B16E2E3F62500085B4D5 /* Products */;
 			projectDirPath = "";
@@ -558,6 +567,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CD06E33A2E40A0FB00DE2885 /* XCRemoteSwiftPackageReference "MarkdownUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/MarkdownUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CD6CC52B2E40A34D0086501A /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD06E33A2E40A0FB00DE2885 /* XCRemoteSwiftPackageReference "MarkdownUI" */;
+			productName = MarkdownUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8475B1652E3F62500085B4D5 /* Project object */;
 }
