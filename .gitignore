@@ -105,24 +105,67 @@ cython_debug/
 .env
 .env.*
 
+### Swift ###
 # Xcode
-.DS_Store
+
+## User settings
+xcuserdata/
+
+## compatibility with Xcode 8 and earlier 
+*.xcscmblueprint
+*.xccheckout
+
+## compatibility with Xcode 3 and earlier 
 build/
 DerivedData/
-*.xcodeproj/xcuserdata/
-*.xcworkspace/xcuserdata/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
 
 # Swift Package Manager
-.swiftpm/xcode/package.xcworkspace/xcuserdata/
+# Packages/
+# Package.pins
+# Package.resolved
+# *.xcodeproj
+# .swiftpm
 
-# CocoaPods (if used)
-Pods/
-*.xcworkspace
-!Pods/.gitkeep
+.build/
 
-# Carthage (if used)
+# CocoaPods
+# Pods/
+# *.xcworkspace
+
+# Carthage
+# Carthage/Checkouts
 Carthage/Build/
 
-# Logs and temporary files
-*.log
-*.tmp
+# Accio dependency management
+Dependencies/
+.accio/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Code Injection
+iOSInjectionProject/
