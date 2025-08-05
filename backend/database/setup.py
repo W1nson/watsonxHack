@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 from sqlalchemy.orm import Session
 from database import engine
-from models import Base, Service, ServiceTier, User, Subscription
+from models import Base, Service, ServiceTier, User, Subscription, Transaction
 from database import SessionLocal
 
 Base.metadata.create_all(bind=engine)
@@ -60,6 +60,19 @@ def load_csv_to_db():
             next_renewal_date=parse_date(row["next_renewal_date"]),
             amount_billed=float(row["amount_billed"]),
             currency=row["currency"]
+        ))
+
+
+    # Load and insert transactions
+    trans_df = pd.read_csv(os.path.join(script_dir, "transactions.csv"))
+    for _, row in trans_df.iterrows():
+        db.add(Transaction(
+            id=row["id"],
+            subscription_id=row["subscription_id"],
+            account=row["account"],
+            amount=row["amount"],
+            status=row["status"],
+            transaction_date=parse_date(row["transaction_date"])
         ))
 
     db.commit()

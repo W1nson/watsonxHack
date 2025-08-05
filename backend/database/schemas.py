@@ -72,3 +72,19 @@ class Subscription(SubscriptionBase):
     class Config:
         orm_mode = True
 
+# Transaction Schemas
+class TransactionBase(BaseModel):
+    subscription_id: int
+    account: str
+    amount: float
+    status: str
+    transaction_date: str
+
+class TransactionCreate(TransactionBase):
+    pass
+
+class Transaction(TransactionBase):
+    id: int
+
+    class Config:
+        orm_mode = True

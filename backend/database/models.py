@@ -60,3 +60,17 @@ class Subscription(Base):
 
     user = relationship("User", back_populates="subscriptions")
     tier = relationship("ServiceTier", back_populates="subscriptions")
+    transactions = relationship("Transaction", back_populates="subscription")
+
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+
+    id = Column(Integer, primary_key=True, index=True)  # Transaction ID
+    subscription_id = Column(Integer, ForeignKey("subscriptions.id"), nullable=False)  # Related Subscription
+    account = Column(String, nullable=False)  # Transaction account (e.g. card number or payment method)
+    amount = Column(Float, nullable=False)  # Amount of the transaction
+    status = Column(String, nullable=False)  # Status of the transaction (e.g. pending, completed, failed)
+    transaction_date = Column(Date, nullable=False)  # Date the transaction was made
+
+    subscription = relationship("Subscription", back_populates="transactions")

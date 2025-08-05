@@ -264,3 +264,85 @@ def delete_subscription(subscription_id: int, db: Session = Depends(get_db)):
     db.delete(db_subscription)
     db.commit()
     return db_subscription
+
+# ------------------ Transaction Endpoints ------------------
+
+# Create a new transaction
+# Input: Transaction Schema (schemas.py)
+# Output: Transaction (schemas.py)
+@db_router.post("/transactions/", response_model=schemas.Transaction)
+def create_transaction(transaction: schemas.TransactionCreate, db: Session = Depends(get_db)):
+    db_transaction = models.Transaction(**transaction.dict())
+    db.add(db_transaction)
+    db.commit()
+    db.refresh(db_transaction)
+    return db_transaction
+
+# Get all transactions
+# Input: None
+# Output: List of Transactions (schemas.py)
+@db_router.get("/transactions/", response_model=list[schemas.Transaction])
+def read_transactions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    transactions = db.query(models.Transaction).offset(skip).limit(limit).all()
+    # Format dates to strings
+    for transaction in transactions:
+        transaction.transaction_date = transaction.transaction_date.strftime("%Y-%m-%d")
+    return transactions
+
+# Get a transaction by ID
+# Input: Transaction ID (using path parameter)
+# Output: Transaction (schemas.py)
+@db_router.get("/transactions/{transaction_id}", response_model=schemas.Transaction)
+def read_transaction(transaction_id: int, db: Session = Depends(get_db)):
+    db_transaction = db.query(models.Transaction).filter(models.Transaction.id == transaction_id).first()
+    if db_transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    # Format date to string
+    db_transaction.transaction_date = db_transaction.transaction_date.strftime("%Y-%m-%d")
+    return db_transaction
+
+# Get transactions by subscription ID
+# Input: Subscription ID (using path parameter)
+# Output: List of Transactions (schemas.py)
+@db_router.get("/subscriptions/{subscription_id}/transactions", response_model=list[schemas.Transaction])
+def read_transactions_by_subscription(subscription_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    transactions = db.query(models.Transaction).filter(
+        models.Transaction.subscription_id == subscription_id
+    ).offset(skip).limit(limit).all()
+    # Format dates to strings
+    for transaction in transactions:
+        transaction.transaction_date = transaction.transaction_date.strftime("%Y-%m-%d")
+    return transactions
+
+# Update a transaction by ID
+# Input: Transaction ID (using path parameter), Transaction Schema (schemas.py)
+# Output: Transaction (schemas.py)
+@db_router.put("/transactions/{transaction_id}", response_model=schemas.Transaction)
+def update_transaction(transaction_id: int, transaction: schemas.TransactionCreate, db: Session = Depends(get_db)):
+    db_transaction = db.query(models.Transaction).filter(models.Transaction.id == transaction_id).first()
+    if db_transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    
+    update_data = transaction.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_transaction, key, value)
+    
+    db.commit()
+    db.refresh(db_transaction)
+    # Format date to string
+    db_transaction.transaction_date = db_transaction.transaction_date.strftime("%Y-%m-%d")
+    return db_transaction
+
+# Delete a transaction by ID
+# Input: Transaction ID (using path parameter)
+# Output: Transaction (schemas.py)
+@db_router.delete("/transactions/{transaction_id}", response_model=schemas.Transaction)
+def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
+    db_transaction = db.query(models.Transaction).filter(models.Transaction.id == transaction_id).first()
+    if db_transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    db.delete(db_transaction)
+    db.commit()
+    # Format date to string before returning
+    db_transaction.transaction_date = db_transaction.transaction_date.strftime("%Y-%m-%d")
+    return db_transaction
