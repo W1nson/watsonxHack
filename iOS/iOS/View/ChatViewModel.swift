@@ -28,7 +28,7 @@ class ChatViewModel: ObservableObject {
 
         Task {
             do {
-                let _aiReply = try await fetchReply(for: trimmed)
+                let aiReply = try await fetchReply(for: trimmed)
                 DispatchQueue.main.async {
                     self.isLoading = false
                 }
