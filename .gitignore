@@ -108,6 +108,8 @@ cython_debug/
 .env
 .env.*
 
+venv/
+
 ### Swift ###
 # Xcode
 

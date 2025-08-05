@@ -61,16 +61,17 @@ class ChatViewModel: ObservableObject {
         var replyText = ""
         for try await line in stream.lines {
             replyText += line
+            let currentReplyText = replyText
             DispatchQueue.main.async {
                 if let last = self.messages.last, !last.isUser {
                     self.messages[self.messages.count - 1] = ChatMessage(
-                        text: replyText,
+                        text: currentReplyText,
                         isUser: false,
                         timestamp: self.messages[self.messages.count - 1].timestamp,
                         avatar: self.messages[self.messages.count - 1].avatar
                     )
                 } else {
-                    self.messages.append(ChatMessage(text: replyText, isUser: false, timestamp: Date(), avatar: "brain.head.profile"))
+                    self.messages.append(ChatMessage(text: currentReplyText, isUser: false, timestamp: Date(), avatar: "brain.head.profile"))
                 }
             }
         }

@@ -9,30 +9,50 @@ import SwiftUI
 
 struct TabScreenView: View {
     enum Tab: Hashable {
-        case tab1, tab2, tab3
-    }
-    @State private var selectedTab: Tab = .tab2
-    
-    var body: some View {
-        TabView(selection: $selectedTab) {
-            // replace with actual screen views
-            Text("Tab1")
-                .tabItem {
-                    Image(systemName: "message")
-                    Text("Tab1")
-                }
-            Text("Tab2")
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("Tab2")
-                }
-            Text("Tab3")
-                .tabItem {
-                    Image(systemName: "person.crop.circle")
-                    Text("Tab3")
-                }
+            case dashboard, payments, analytics, transactions, jarvisAI
         }
-//        .accentColor(Color(.red))
+    @State private var selectedTab: Tab = .jarvisAI
+    @State private var isTapped = false
+
+    var body: some View {
+        // replace with actual screen views
+        TabView(selection: $selectedTab) {
+            Text("Dashboard Tab")
+                .tabItem {
+                    Image(selectedTab == .dashboard ? "dashboard-interactive" : "dashboardtest")
+                    Text("Dashboard")
+                }
+                .tag(Tab.dashboard)
+            Text("Payments Tab")
+                .tabItem {
+                    Image(selectedTab == .payments ? "payments-interactive" : "payments")
+                    Text("Payments")
+                }
+                .tag(Tab.payments)
+
+            Text("Analytics Tab")
+                .tabItem {
+                    Image(selectedTab == .analytics ? "analytics-interactive" : "analytics")
+                    Text("Analytics")
+                }
+                .tag(Tab.analytics)
+
+            Text("Transactions Tab")
+                .tabItem {
+                    Image(selectedTab == .transactions ? "transactions-interactive" : "transactions")
+                    Text("Transactions")
+                }
+                .tag(Tab.transactions)
+
+            ChatView()
+                .tabItem {
+                    Image(selectedTab == .jarvisAI ? "ai-interactive" : "ai")
+                    Text("Jarvis")
+                }
+                .tag(Tab.jarvisAI)
+
+        }
+        .accentColor(Color(.purple))
     }
 }
 
