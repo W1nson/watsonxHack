@@ -5,17 +5,17 @@ from tools import get_weather, get_current_earthquake, get_current_date
 from prompts import disaster_advisor_instructions
 from llm import watsonx_model
 
-# agent = create_react_agent(
-#     model=ChatOllama(model="granite3.3:latest"),
-#     tools=[get_weather, get_current_earthquake, get_current_date],
-#     prompt=disaster_advisor_instructions,
-# )
-
 agent = create_react_agent(
-    model=watsonx_model,
+    model=ChatOllama(model="granite3.3:latest"),
     tools=[get_weather, get_current_earthquake, get_current_date],
     prompt=disaster_advisor_instructions,
 )
+
+# agent = create_react_agent(
+#     model=watsonx_model,
+#     tools=[get_weather, get_current_earthquake, get_current_date],
+#     prompt=disaster_advisor_instructions,
+# )
 
 def run_agent(user_input):
     """

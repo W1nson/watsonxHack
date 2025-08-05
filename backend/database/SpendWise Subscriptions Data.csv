@@ -1,0 +1,14 @@
+ID,Account,Amount,Type,Frequency,CCLastFour,BankAccount,Due Date
+1,Netflix,11.99,Entertainment,monthly,7986,Chase,8/3/2025
+2,Spotify,9.99,Music,monthly,1234,Wells Fargo,8/10/2025
+3,Amazon Prime,14.99,Shopping,annually,5678,Bank of America,9/1/2025
+4,HBO Max,15.99,Entertainment,monthly,9012,Chase,8/5/2025
+5,Gym Membership,29.99,Health,monthly,3456,Citi,8/15/2025
+6,Microsoft 365,6.99,Productivity,monthly,7890,Discover,8/20/2025
+7,New York Times,4.99,News,monthly,2345,Capital One,8/7/2025
+8,Disney+,7.99,Entertainment,monthly,4321,Chase,8/12/2025
+9,Adobe Creative,52.99,Productivity,monthly,8765,Wells Fargo,8/25/2025
+10,Hulu,6.99,Entertainment,monthly,2109,Bank of America,8/8/2025
+11,LinkedIn Premium,29.99,Professional,monthly,6543,Citi,9/5/2025
+12,Apple Music,9.99,Music,monthly,9876,Discover,8/18/2025
+13,MasterClass,15,Education,monthly,1098,Capital One,9/10/2025
