@@ -216,6 +216,10 @@ def create_subscription(subscription: schemas.SubscriptionCreate, db: Session = 
 @db_router.get("/subscriptions/", response_model=list[schemas.Subscription])
 def read_subscriptions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     subscriptions = db.query(models.Subscription).offset(skip).limit(limit).all()
+    for subscription in subscriptions:
+        subscription.start_date = subscription.start_date.strftime("%Y-%m-%d")
+        subscription.last_billed_date = subscription.last_billed_date.strftime("%Y-%m-%d")
+        subscription.next_renewal_date = subscription.next_renewal_date.strftime("%Y-%m-%d")
     return subscriptions
 
 # Get a subscription by ID
@@ -226,6 +230,9 @@ def read_subscription(subscription_id: int, db: Session = Depends(get_db)):
     db_subscription = db.query(models.Subscription).filter(models.Subscription.id == subscription_id).first()
     if db_subscription is None:
         raise HTTPException(status_code=404, detail="Subscription not found")
+    db_subscription.start_date = db_subscription.start_date.strftime("%Y-%m-%d")
+    db_subscription.last_billed_date = db_subscription.last_billed_date.strftime("%Y-%m-%d")
+    db_subscription.next_renewal_date = db_subscription.next_renewal_date.strftime("%Y-%m-%d")
     return db_subscription
 
 # Update a subscription by ID
@@ -241,6 +248,9 @@ def update_subscription(subscription_id: int, subscription: schemas.Subscription
         setattr(db_subscription, key, value)
     db.commit()
     db.refresh(db_subscription)
+    db_subscription.start_date = db_subscription.start_date.strftime("%Y-%m-%d")
+    db_subscription.last_billed_date = db_subscription.last_billed_date.strftime("%Y-%m-%d")
+    db_subscription.next_renewal_date = db_subscription.next_renewal_date.strftime("%Y-%m-%d")
     return db_subscription
 
 # Delete a subscription by ID

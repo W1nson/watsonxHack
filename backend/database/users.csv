@@ -1,0 +1,4 @@
+id,email,firstName,lastName,phoneNumber
+1,alice@example.com,Alice,Smith,1234567890
+2,bob@example.com,Bob,Jones,9876543210
+3,carol@example.com,Carol,Taylor,5551234567
