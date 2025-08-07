@@ -44,4 +44,3 @@ def web_search(query: str) -> dict:
     return response.json()
 
 
-

@@ -8,12 +8,21 @@ from langchain_core.runnables import RunnableConfig
 class Configuration(BaseModel):
     """The configuration for the agent."""
 
+    
     query_generator_model: str = Field(
         default="granite3.3:latest",
         metadata={
             "description": "The name of the language model to use for the agent's query generation."
         },
     )
+    
+    sql_query_generator_model: str = Field(
+        default="granite3.3:latest",
+        metadata={
+            "description": "The name of the language model to use for the agent's SQL query generation."
+        },
+    )
+
 
     reflection_model: str = Field(
         default="granite3.3:latest",

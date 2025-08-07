@@ -1,5 +1,9 @@
 from typing import List
 from langchain_core.messages import AnyMessage, AIMessage, HumanMessage
+from langchain_community.utilities import SQLDatabase
+import os 
+from dotenv import load_dotenv
+load_dotenv()
 
 # streamming on to console: 
 def stream_to_console(agent, inputs, stream_mode="messages"):

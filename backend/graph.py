@@ -32,10 +32,40 @@ from utils import (
     # insert_citation_markers,
     # resolve_urls,
 )
+from database import SessionLocal
 
 load_dotenv()
 
+
+
+
 # Nodes
+def generate_sql_query(state: OverallState, config: RunnableConfig) -> QueryGenerationState:
+    """LangGraph node that generates SQL queries based on the User's question.
+    
+    
+    """
+    configurable = Configuration.from_runnable_config(config)
+
+    # initialize llm based on provider
+    if "ibm" in configurable.sql_query_generator_model:
+        llm = watsonx_model
+    else:
+        llm = ollama_model
+
+    
+    
+def execute_sql_query(state: OverallState, config: RunnableConfig) -> OverallState:
+    """LangGraph node that executes SQL queries based on the User's question.
+    
+    """
+    configurable = Configuration.from_runnable_config(config)
+
+    # performing sql executions 
+    
+    
+    
+    
 def generate_query(state: OverallState, config: RunnableConfig) -> QueryGenerationState:
     """LangGraph node that generates search queries based on the User's question.
 
@@ -73,6 +103,9 @@ def generate_query(state: OverallState, config: RunnableConfig) -> QueryGenerati
     # Generate the search queries
     result = structured_llm.invoke(formatted_prompt)
     return {"search_query": result.query}
+
+
+
 
 
 

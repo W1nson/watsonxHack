@@ -3,13 +3,3 @@ id,service_id,tier_name,billing_period,price_usd,max_seats,ads_free,trial_days
 2,1,Premium,monthly,19.99,4,True,30
 3,2,Individual,monthly,10.99,1,True,30
 4,3,Family,yearly,129.99,6,True,30
-5,4,Individual,monthly,10.99,1,True,30
-6,5,Monthly,monthly,14.99,2,True,30
-7,5,Annual,yearly,139.00,2,True,30
-8,6,Student,monthly,5.99,1,True,30
-9,6,Family,monthly,16.99,6,True,30
-10,7,Premium,monthly,13.99,1,True,30
-11,8,All Apps,monthly,54.99,1,True,7
-12,9,Career,monthly,29.99,1,True,30
-13,10,With Ads,monthly,9.99,2,False,30
-14,10,Ad-Free,monthly,15.99,2,True,30
