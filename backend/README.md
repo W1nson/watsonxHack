@@ -14,3 +14,10 @@ python3 main.py
 ```
 
 4. check the API Documentation at http://localhost:8000/docs
+
+
+## Testing 
+
+1. Run the `flow.ipynb`
+    - This will test the flow of the application
+    - This is the flow testing for the graph
