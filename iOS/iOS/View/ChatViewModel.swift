@@ -10,6 +10,15 @@ import Foundation
 import Combine
 import MarkdownUI
 
+struct Message: Codable {
+    let role: String
+    let content: String
+}
+
+struct ChatAPIResponseString: Codable { let response: Message }
+struct ChatAPIResponseArray: Codable { let response: [Message] }
+
+
 class ChatViewModel: ObservableObject {
     @Published var messages: [ChatMessage] = []
     @Published var inputText: String = ""
@@ -41,26 +50,29 @@ class ChatViewModel: ObservableObject {
         }
     }
 
-    private func fetchReply(for userInput: String) async throws -> String {
-        // Building the backend URL 
+    private func fetchReply(for userInput: String, userId: String = "2") async throws -> String {
+        // Building the backend URL
         guard let url = URL(string: endpoint) else { throw URLError(.badURL) }
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("text/event-stream", forHTTPHeaderField: "Accept")
 
-        let body = try JSONEncoder().encode(ChatRequest(user_input: userInput))
+
+        let body = try JSONEncoder().encode(ChatRequest(user_input: userInput, user_id: userId))
         request.httpBody = body
 
-        let (stream, response) = try await URLSession.shared.bytes(for: request)
-        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
             throw URLError(.badServerResponse)
         }
 
+        let decoder = JSONDecoder()
+        let res = try decoder.decode(ChatAPIResponseArray.self, from: data)
         var replyText = ""
-        for try await line in stream.lines {
-            replyText += line
+        for message in res.response {
+            replyText += message.content
             let currentReplyText = replyText
             DispatchQueue.main.async {
                 if let last = self.messages.last, !last.isUser {

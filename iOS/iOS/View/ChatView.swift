@@ -18,6 +18,7 @@ struct ChatMessage: Identifiable {
 
 struct ChatRequest: Codable {
     let user_input: String
+    let user_id: String
 }
 
 struct ChatResponse: Codable {
