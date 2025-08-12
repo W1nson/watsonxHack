@@ -8,8 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showingSheet = false
+
     var body: some View {
-        TabScreenView() 
+        ZStack {
+            DashboardView()
+    
+            ChatButtonView(showingSheet: $showingSheet)
+                .sheet(isPresented: $showingSheet) {
+                    ChatView(showingSheet: $showingSheet)
+                        .presentationCornerRadius(25)
+                }
+        }
     }
 }
 
