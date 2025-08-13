@@ -15,11 +15,23 @@ struct ChatMessage: Identifiable {
     let timestamp: Date
     let avatar: String
     var isRec: Bool = false
+    var isSug: Bool = false
 }
 
 struct MessageScrollView: View {
     let messages: [ChatMessage]
     let isLoading: Bool
+    let onSuggestionTap: ((String) -> Void)?
+    
+    init(
+        messages: [ChatMessage],
+        isLoading: Bool,
+        onSuggestionTap: ((String) -> Void)? = nil
+    ) {
+        self.messages = messages
+        self.isLoading = isLoading
+        self.onSuggestionTap = onSuggestionTap
+    }
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -27,7 +39,7 @@ struct MessageScrollView: View {
                 LazyVStack(alignment: .leading, spacing: 12) {
                     ForEach(messages.indices, id: \.self) { index in
                         let previousMessage = index > 0 ? messages[index - 1] : nil
-                        MessageRowView(message: messages[index], previousMessage: previousMessage)
+                        MessageRowView(message: messages[index], previousMessage: previousMessage, onSuggestionTap: onSuggestionTap)
                     }
 
                     if isLoading {
@@ -52,6 +64,7 @@ struct MessageScrollView: View {
 struct MessageRowView: View {
     let message: ChatMessage
     let previousMessage: ChatMessage?
+    let onSuggestionTap: ((String) -> Void)?
     
     // Create a date formatter to display the date
     private let dateFormatter: DateFormatter = {
@@ -75,7 +88,25 @@ struct MessageRowView: View {
             
             HStack(alignment: .top, spacing: 8) {
                 if !message.isUser {
-                    if message.isRec {
+                    if message.isSug {
+                        Button(action: { onSuggestionTap?(message.text) }) {
+                            Markdown(message.text)
+                                .markdownBlockStyle(\.paragraph) { configuration in
+                                    VStack {
+                                        configuration.label
+                                    }
+                                    .padding(7)
+                                    .cornerRadius(25)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 25)
+                                            .stroke(Color.customPurple, lineWidth: 1)
+                                    )
+                                    .foregroundColor(Color.customPurple)
+                                }
+                        }
+                    }
+                    
+                    else if message.isRec {
                         VStack(alignment: .leading) {
                             Markdown(message.text)
                                 .markdownBlockStyle(\.paragraph) { configuration in
@@ -171,6 +202,11 @@ struct MessageScrollView_Previews: PreviewProvider {
             """
 
         let sampleMessages = [
+            ChatMessage(text: "Hi Alice, Here are some things I can help with:", isUser: false, timestamp: Date().addingTimeInterval(-3600), avatar: "Avatar-jarvis"),
+            ChatMessage(text: "Recommend Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
+            ChatMessage(text: "Ask About Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
+            ChatMessage(text: "Compare Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
+            ChatMessage(text: "Save Money", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
             ChatMessage(text: greetingString, isUser: false, timestamp: Date().addingTimeInterval(-120), avatar: "Avatar-jarvis"),
             ChatMessage(text: recommandatiaons, isUser: false, timestamp: Date().addingTimeInterval(-90), avatar: "", isRec: true),
             ChatMessage(text: "Can you tell me how to budget?", isUser: true, timestamp: Date().addingTimeInterval(-60), avatar: ""),

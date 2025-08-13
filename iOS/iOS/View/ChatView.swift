@@ -28,7 +28,11 @@ struct ChatView: View {
         ChatHeaderTitleView(showingSheet: $showingSheet)
         
         VStack {
-            MessageScrollView(messages: viewModel.messages, isLoading: viewModel.isLoading)
+            MessageScrollView(
+                messages: viewModel.messages,
+                isLoading: viewModel.isLoading,
+                onSuggestionTap: { text in viewModel.onSuggestionTap(text: text) }
+            )
             Divider()
             InputView(viewModel: viewModel)
         }

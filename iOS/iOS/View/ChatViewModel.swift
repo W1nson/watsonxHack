@@ -26,12 +26,56 @@ struct ChatAPIResponse: Codable {
 
 
 class ChatViewModel: ObservableObject {
-    @Published var messages: [ChatMessage] = []
+    @Published var messages: [ChatMessage] = [
+            ChatMessage(text: "Hi Alice, Here are some things I can help with:", isUser: false, timestamp: Date().addingTimeInterval(-3600), avatar: "Avatar-jarvis"),
+            ChatMessage(text: "Recommend Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
+            ChatMessage(text: "Ask About Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
+            ChatMessage(text: "Compare Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
+            ChatMessage(text: "Save Money", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
+    ]
     @Published var inputText: String = ""
     @Published var isLoading = false
-
+    
     private let endpoint = "http://localhost:8000/chat"
 
+    func onSuggestionTap(text: String) {
+        
+        var prompt = ""
+        switch text.lowercased() {
+            case "recommend subscriptions":
+                prompt = "Can you please recommend me some better alternatives to my current subscription?"
+            case "ask about subscriptions":
+                prompt = "Can you please explain more about my current subscription?"
+            case "compare subscriptions":
+                prompt = "Can you please compare my current subscription with other subscriptions?"
+            case "save money":
+                prompt = "Can you please help me save money on my current subscription?"
+        default:
+            break
+        }
+
+
+        // Append as if the user typed it
+        let userMessage = ChatMessage(text: prompt, isUser: true, timestamp: Date(), avatar: "person.circle.fill")
+        messages.append(userMessage)
+        isLoading = true
+
+        Task {
+            do {
+                let _ = try await fetchReply(for: prompt)
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.messages.append(ChatMessage(text: "Error: \(error.localizedDescription)", isUser: false, timestamp: Date(), avatar: "brain.head.profile"))
+                    self.isLoading = false
+                }
+            }
+        }
+    }
+    
+    
     func sendMessage() {
         let trimmed = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
