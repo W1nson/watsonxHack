@@ -1,5 +1,5 @@
 id,user_id,tier_id,start_date,renewal_frequency,auto_renew,current_status,last_billed_date,next_renewal_date,amount_billed,currency
-1,1,1,2023-01-08,monthly,False,cancelled,2023-02-07,2023-03-09,6.99,USD
+1,1,1,2023-01-08,monthly,True,active,2023-02-07,2023-03-09,6.99,USD
 2,2,1,2023-01-11,monthly,False,cancelled,2023-02-10,2023-03-12,6.99,USD
 3,3,2,2023-01-07,monthly,False,cancelled,2023-02-06,2023-03-08,19.99,USD
 4,3,1,2023-01-11,monthly,True,cancelled,2023-02-10,2023-03-12,6.99,USD

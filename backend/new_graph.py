@@ -1,26 +1,23 @@
 from database.database import SessionLocal
 from sqlalchemy import text
 
-from typing import TypedDict
-from langgraph.graph import add_messages
-from typing_extensions import Annotated
-import operator
 from langgraph.graph import StateGraph
 from langgraph.graph import START, END
-from llm import watsonx_model
 
-# overall state  
-class OverallState(TypedDict):
-    messages: Annotated[list, add_messages]
-    user_id: int 
-    firstName: str
-    lastName: str
-    subscriptions: Annotated[list, operator.add]
+from langchain_core.runnables import RunnableConfig
+from configuration import Configuration
+
+from langchain_community.utilities import SerpAPIWrapper
+from langchain_core.tools import Tool
+from langgraph.prebuilt import ToolNode, tools_condition
+
+from llm import watsonx_model as llm 
+from prompts import subscription_analysis_prompt, test_prompt
+
+from state import OverallState
 
 
-
-
-def get_user_subscription(state: OverallState):
+def get_user_subscription(state: OverallState, config: RunnableConfig):
     db = SessionLocal()
     user_id = state["user_id"]
     out = db.execute(text(f"""SELECT 
@@ -53,9 +50,57 @@ def get_user_subscription(state: OverallState):
     return {'subscriptions': subscriptions, "firstName": firstName, "lastName": lastName}
 
 
+# Generate Query for websearch 
+# def generate_query(state: OverallState, config: RunnableConfig):
+#     subscription_history = state["subscriptions"]
+#     column = "service_name | category | tier_name | price_usd | subscription_start | subscription_status\n"
+#     format_subscription_history = column + "\n".join([f"{sub['service_name']} | {sub['category']} | {sub['tier_name']} | {sub['price_usd']} | {sub['subscription_start']} | {sub['subscription_status']}" for sub in subscription_history])
+
+#     query_prompt = query_prompt.format(subscription_history=format_subscription_history, number_queries=5, current_date=get_current_date())
+
+#     query = llm.invoke(query_prompt)
+#     out = query.content.replace('-','').strip().split('\n ')
+#     print(len(out))
+#     return {"query": out}
 
 
-def agent_review_user_subscription(state: OverallState):
+# Web Search tool node 
+
+search = SerpAPIWrapper()
+search_tool = Tool(
+    name="web_search",
+    description="Search the web for information",
+    func=search.run,
+)
+# You can create the tool to pass to an agent
+search_tool_node = ToolNode([search_tool])
+
+
+
+def route_tools(
+    state: OverallState,
+    config: RunnableConfig,
+):
+    """
+    Use in the conditional_edge to route to the ToolNode if the last message
+    has tool calls. Otherwise, route to the end.
+    """
+    configurable = Configuration.from_runnable_config(config)
+    
+    if state['web_search_count'] >= configurable.maximum_web_search:
+        return END
+    elif messages := state.get("messages", []):
+        ai_message = messages[-1]
+    else:
+        raise ValueError(f"No messages found in input state to tool_edge: {state}")
+    print(ai_message)
+    if hasattr(ai_message, "tool_calls") and len(ai_message.tool_calls) > 0:
+        state['web_search_count'] += 1
+        return "tools"
+    return END
+
+
+def agent_review_user_subscription(state: OverallState, config: RunnableConfig):
     # configurable = Configuration.from_runnable_config(config)
     firstName = state["firstName"]
     question = state["messages"][0].content
@@ -63,69 +108,48 @@ def agent_review_user_subscription(state: OverallState):
 
     column = "service_name | category | tier_name | price_usd | subscription_start | subscription_status\n"
     format_subscription_history = column + "\n".join([f"{sub['service_name']} | {sub['category']} | {sub['tier_name']} | {sub['price_usd']} | {sub['subscription_start']} | {sub['subscription_status']}" for sub in subscription_history])
-    # print(format_subscription_history)
-    subscription_analysis_prompt = f"""
-You are a helpful financial assistant. Your job is to analyze the user's subscription history and recommend ways to reduce their monthly spending.
-Here is the user's subscription history:
-    {format_subscription_history}
 
-Based on the provided subscription data, do the following:
-    1.	Usage Analysis
+    subscription_analysis = test_prompt.format(subscriptions=format_subscription_history, firstName=firstName, question=question)
 
-    •	Determine if the user is actively using each subscription (based on any usage data if available).
-    •	If usage is not provided, don't make assumptions.
-
-    2.	Cost Efficiency Evaluation
-
-    •	Identify the most expensive subscriptions.
-    •	Determine whether each subscription appears to offer good value for the price.
-
-    3.	Cheaper Alternatives
-
-    •	Search online for cheaper alternatives with similar features (e.g., if the user pays for Spotify, check for cheaper music services or free versions).
-    •	Provide relevant names and estimated prices of those services.
-
-    4.	Cancellation Suggestions
-
-    •	If a service is rarely or never used, or is overpriced compared to alternatives, suggest canceling it.
-
-    5.	Summary of Actions
-
-    •	Summarize in clear, actionable steps:
-    •	Which subscriptions to keep, cancel, or replace (and with what).
-    •	Total estimated monthly savings if recommendations are followed.
-
-When generating your response:
-    •	Be concise but informative.
-    •	Use bullet points for clarity.
-    •	Be neutral and helpful, DO NOT shame the user for spending.
-    •	Use the user name to respond to the user casually: {firstName}. 
-    •	At the end, please offer user the recommandation actions that you have suggested.
-
-    Question: {question}
-    """    
-
-    # if "ibm" in configurable.subscription_analysis_model:
-    #     llm = watsonx_model
-    # else:
-    #     llm = ollama_model
-
-    llm = watsonx_model
-    message = llm.invoke(subscription_analysis_prompt)
+    message = llm.invoke(subscription_analysis)
 
     return {'messages': message, 'subscription_suggestion': message}
 
 
 
+def save_graph(graph): 
+    from IPython.display import Image, display
+    from langchain_core.runnables.graph import CurveStyle, MermaidDrawMethod, NodeStyles
 
-builder = StateGraph(OverallState)
+    graph.get_graph().draw_mermaid_png(output_file_path="graph.png")
+
+
+
+
+
+from langgraph.checkpoint.memory import InMemorySaver
+
+memory = InMemorySaver()
+builder = StateGraph(OverallState, config=Configuration)
 
 builder.add_node("get_user_subscription", get_user_subscription)
 builder.add_node("agent_review_user_subscription", agent_review_user_subscription)
-
+# builder.add_node("search_tool_node", search_tool_node)
+# builder.add_node("generate_query", generate_query)
 
 builder.add_edge(START, "get_user_subscription")
 builder.add_edge("get_user_subscription", "agent_review_user_subscription")
+# builder.add_conditional_edges(
+#     "agent_review_user_subscription",
+#     route_tools,  # Routes to "tools" or "__end__"
+#     {"tools": "search_tool_node", END: END}
+# )
+# builder.add_edge("search_tool_node", "agent_review_user_subscription")
+
 builder.add_edge("agent_review_user_subscription", END)
 
-agent = builder.compile(name="finance-budget-search-agent")
+agent = builder.compile(name="finance-budget-search-agent", checkpointer=memory)
+
+
+save_graph(agent)
+

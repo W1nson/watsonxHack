@@ -10,13 +10,19 @@ import Foundation
 import Combine
 import MarkdownUI
 
-struct Message: Codable {
+private let recommendationsPrefix = "__RECOMMENDATIONS__:"
+
+struct ChatAPIMessage: Codable {
     let role: String
     let content: String
 }
 
-struct ChatAPIResponseString: Codable { let response: Message }
-struct ChatAPIResponseArray: Codable { let response: [Message] }
+struct ChatAPIResponse: Codable {
+    let response: [ChatAPIMessage]
+    let recommendations: [String]
+    let answer: [String]
+    let follow_up: [String]
+}
 
 
 class ChatViewModel: ObservableObject {
@@ -58,7 +64,6 @@ class ChatViewModel: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-
         let body = try JSONEncoder().encode(ChatRequest(user_input: userInput, user_id: userId))
         request.httpBody = body
 
@@ -69,25 +74,47 @@ class ChatViewModel: ObservableObject {
         }
 
         let decoder = JSONDecoder()
-        let res = try decoder.decode(ChatAPIResponseArray.self, from: data)
-        var replyText = ""
-        for message in res.response {
-            replyText += message.content
-            let currentReplyText = replyText
+        let api = try decoder.decode(ChatAPIResponse.self, from: data)
+        
+        print(api.recommendations)
+        // 1) ANSWER bubble (plain text)
+        var answerText: String? = nil
+        if !api.answer.isEmpty {
+            answerText = api.answer.joined(separator: " ")
+//        } else if let lastAssistant = api.response.last(where: { $0.role.lowercased() == "assistant" }) {
+//            answerText = lastAssistant.content
+        }
+        if let answerText {
             DispatchQueue.main.async {
-                if let last = self.messages.last, !last.isUser {
-                    self.messages[self.messages.count - 1] = ChatMessage(
-                        text: currentReplyText,
-                        isUser: false,
-                        timestamp: self.messages[self.messages.count - 1].timestamp,
-                        avatar: self.messages[self.messages.count - 1].avatar
-                    )
-                } else {
-                    self.messages.append(ChatMessage(text: currentReplyText, isUser: false, timestamp: Date(), avatar: "brain.head.profile"))
-                }
+                self.messages.append(ChatMessage(text: answerText, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"))
             }
         }
 
-        return replyText
+        // 2) RECOMMENDATIONS bubble (tagged for button UI)
+        if !api.recommendations.isEmpty {
+            let recs = api.recommendations
+            for rec in recs {
+                print("rec: \(rec)")
+                DispatchQueue.main.async {
+                    self.messages.append(ChatMessage(text: rec, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis", isRec: true))
+                }
+            }
+            
+            
+        }
+
+        // 3) FOLLOW-UP bubble (plain text)
+        if !api.follow_up.isEmpty {
+//            let follows = api.follow_up
+            let followText = api.follow_up.joined(separator: " ")
+            DispatchQueue.main.async {
+                self.messages.append(ChatMessage(text: followText, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"))
+            }
+        }
+
+        // Return last non-empty piece for testing
+        return self.messages.last?.text ?? ""
     }
 }
+
+

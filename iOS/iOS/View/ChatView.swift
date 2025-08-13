@@ -15,6 +15,9 @@ struct ChatRequest: Codable {
 
 struct ChatResponse: Codable {
     let response: String
+    let recommendations: [String]
+    let answer: [String]
+    let follow_up: [String]
 }
 
 struct ChatView: View {

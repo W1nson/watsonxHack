@@ -2,7 +2,7 @@ from langgraph.prebuilt import create_react_agent
 from langchain_ollama import ChatOllama
 from utils import stream_to_console
 from tools import get_weather, get_current_earthquake, get_current_date
-from prompts import disaster_advisor_instructions
+# from prompts import disaster_advisor_instructions
 from llm import watsonx_model
 
 agent = create_react_agent(
