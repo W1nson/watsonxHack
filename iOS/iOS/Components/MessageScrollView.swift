@@ -91,14 +91,19 @@ struct MessageRowView: View {
                     if message.isSug {
                         Button(action: { onSuggestionTap?(message.text) }) {
                             Markdown(message.text)
-                                .markdownBlockStyle(\.paragraph) { configuration in
+                                .markdownBlockStyle(\.paragraph) {
+                                    configuration in
                                     VStack {
                                         configuration.label
                                     }
-                                    .padding(7)
-                                    .cornerRadius(25)
+                                    .markdownTextStyle {
+                                          FontSize(14)
+                                        }
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 16)
+                                    .cornerRadius(24)
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 25)
+                                        RoundedRectangle(cornerRadius: 24)
                                             .stroke(Color.customPurple, lineWidth: 1)
                                     )
                                     .foregroundColor(Color.customPurple)
@@ -119,6 +124,9 @@ struct MessageRowView: View {
                                             //                                            .padding(.leading, 10)
                                         }
                                     }
+                                    .markdownTextStyle {
+                                          FontSize(14)
+                                    }
                                     .padding()
                                     .cornerRadius(10)
                                     .overlay(
@@ -136,7 +144,11 @@ struct MessageRowView: View {
                             Markdown(message.text)
                                 .markdownBlockStyle(\.paragraph) { configuration in
                                     configuration.label
+                                        .markdownTextStyle {
+                                          FontSize(14)
+                                        }
                                 }
+                                
                         }
                     }
                 }
@@ -145,6 +157,9 @@ struct MessageRowView: View {
                         .markdownBlockStyle(\.paragraph) { configuration in
                             configuration.label
 //                                .font(.setCustom(fontStyle: .body, fontWeight: .regular))
+                                .markdownTextStyle {
+                                    FontSize(14)
+                                }
                                 .foregroundColor(.white)
                                 .padding(.horizontal)
                                 .padding(.vertical, 10)
