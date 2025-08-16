@@ -22,7 +22,7 @@ extension Color {
     static let playstationBlue = Color(hex: "#0160B9").opacity(0.12)
     static let messageBubble = Color(hex: "#7211AF")
     static let divider = Color(hex: "#E7E7E7")
-    static let messageBubble = Color(hex: "#7211AF")
+    static let textPrimary = Color(hex: "#1B1A1C")
 }
 
 extension Color {

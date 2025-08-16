@@ -141,14 +141,23 @@ struct MessageRowView: View {
                     else {
                         VStack(alignment: .leading) {
                             Image(message.avatar)
+                                .padding(.bottom, 2)
                             Markdown(message.text)
+                                .markdownBlockStyle(\.listItem) { configuration in
+                                    configuration.label
+                                        .padding(.leading, -15)
+                                        .padding(.bottom, 8)
+                                }
+                            
                                 .markdownBlockStyle(\.paragraph) { configuration in
                                     configuration.label
                                         .markdownTextStyle {
                                           FontSize(14)
                                         }
                                 }
-                                
+                                .padding(.trailing, 40)
+                                .lineSpacing(3)
+
                         }
                     }
                 }
@@ -156,7 +165,6 @@ struct MessageRowView: View {
                     Markdown(message.text)
                         .markdownBlockStyle(\.paragraph) { configuration in
                             configuration.label
-//                                .font(.setCustom(fontStyle: .body, fontWeight: .regular))
                                 .markdownTextStyle {
                                     FontSize(14)
                                 }
@@ -215,6 +223,19 @@ struct MessageScrollView_Previews: PreviewProvider {
                - Consider Replacing: Netflix, based on the available cheaper streaming alternatives listed if you wish to have a streaming service.
                - Estimated savings are difficult to quantify without knowing your exact usage but could be around $15-$60 monthly, depending on the decisions made.
             """
+        
+        let markdownString2 = """
+        Hi James, based on your current subscription list, here are some tips to save approximately $3,300 a year:
+                  
+        * **Switch to Netflix Standard with Ads** ($6.99/month) as it's much cheaper than your current plan, though it includes ads and Full HD resolution.
+        * **Consider switching your Spotify Premium to a free plan with occasional ads** to save around $143.88 annually.
+        * **Explore the Google One Family plan** for better value if multiple users are involved, potentially costing more upfront but offering shared benefits.
+        * **Keep an eye out for annual discounts or free trials** on your PlayStation Plus, which could save you $50 a year.
+        * **Evaluate your Kindle Unlimited usage and consider using your local library for free e-books and audiobooks** to save approximately $143.88 annually.
+        * **Plan your meals and shop for groceries** instead of using HelloFresh, which could save you a significant amount based on your usage.
+             
+        These changes can help you optimize your subscriptions based on your usage patterns and preferences. Do you want to prioritize reducing costs, simplifying management, or hunting for better deals?
+        """
 
         let sampleMessages = [
             ChatMessage(text: "Hi Alice, Here are some things I can help with:", isUser: false, timestamp: Date().addingTimeInterval(-3600), avatar: "Avatar-jarvis"),
@@ -225,6 +246,7 @@ struct MessageScrollView_Previews: PreviewProvider {
             ChatMessage(text: greetingString, isUser: false, timestamp: Date().addingTimeInterval(-120), avatar: "Avatar-jarvis"),
             ChatMessage(text: recommandatiaons, isUser: false, timestamp: Date().addingTimeInterval(-90), avatar: "", isRec: true),
             ChatMessage(text: "Can you tell me how to budget?", isUser: true, timestamp: Date().addingTimeInterval(-60), avatar: ""),
+//            ChatMessage(text: markdownString2, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"),
             ChatMessage(text: markdownString, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis")
         ]
         

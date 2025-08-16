@@ -13,6 +13,7 @@ struct SpendingCardView: View {
             HStack {
                 Text("This Month's Spending")
                     .font(.setCustom(fontStyle: .title, fontWeight: .semibold))
+                    .foregroundColor(Color.textPrimary)
                 Spacer()
                 Image("arrow_right")
                     .foregroundColor(Color.customDarkGray)
@@ -26,6 +27,7 @@ struct SpendingCardView: View {
                         .padding(.bottom, -3)
                     Text("$432.77")
                         .font(.setCustom(fontStyle: .headline, fontWeight: .semibold))
+                        .foregroundColor(Color.textPrimary)
                 }
                 Spacer()
                 Divider()
@@ -38,6 +40,7 @@ struct SpendingCardView: View {
                         .padding(.bottom, -3)
                     Text("$139.69")
                         .font(.setCustom(fontStyle: .headline, fontWeight: .semibold))
+                        .foregroundColor(Color.textPrimary)
                 }
                 Spacer()
             }
@@ -45,7 +48,7 @@ struct SpendingCardView: View {
         .padding()
         .background(Color.white)
         .cornerRadius(16)
-        .shadow(radius: 2)
+        .shadow(color: .black.opacity(0.03), radius: 5, x: 0, y: 2)
     }
 }
 

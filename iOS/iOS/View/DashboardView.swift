@@ -25,6 +25,8 @@ struct DashboardView: View {
                     DashboardHeaderView()
                     SpendingCardView()
                         .padding()
+//                        .padding(.top, 5)
+
                     HStack {
                         TitleLabelView(title: "Upcoming Payments")
                         Spacer()
@@ -75,13 +77,12 @@ struct DashboardView: View {
                     TransactionsView()
                         .padding()
                     
-                    // TODO: customize dashboard
                     CustomizeDashboardView()
                         .padding()
                 }
             }
         }
-        .safeAreaInset(edge: .top, spacing: 0) {
+        .safeAreaInset(edge: .top, spacing: 5) {
             Color.customPurple
                 .ignoresSafeArea()
                 .frame(height: 0)
@@ -110,6 +111,7 @@ struct TitleLabelView: View {
         HStack {
             Text(title)
                 .font(.setCustom(fontStyle: .title, fontWeight: .semibold))
+                .foregroundColor(Color.textPrimary)
             Spacer()
         }
     }
@@ -160,7 +162,7 @@ struct SubscriptionView: View {
         .padding()
         .background(Color.white)
         .cornerRadius(12)
-        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .shadow(color: .black.opacity(0.03), radius: 5, x: 0, y: 2)
     }
 }
 
@@ -179,7 +181,7 @@ struct CustomizeDashboardView: View {
         }
         .background(Color.white)
         .cornerRadius(12)
-        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .shadow(color: .black.opacity(0.03), radius: 5, x: 0, y: 2)
     }
 }
 

@@ -22,9 +22,48 @@ struct PaymentCardView: View {
             return Color.customGray
         }
     }
-    
+//    
+//    var body: some View {
+//        VStack {
+//            VStack {
+//                if subscription.name.lowercased().contains("view all") {
+//                    HStack {
+//                        Text("View All")
+//                            .font(.setCustom(fontStyle: .body, fontWeight: .medium))
+//                        Image("arrow_forward")
+//                    }
+//                    .foregroundColor(Color.customPurple)
+//                } else {
+//                    ZStack(alignment: .bottom) {
+//                        RoundedRectangle(cornerRadius: 8)
+//                            .fill(getSubscriptionColor())
+//                            .frame(width: 110, height: 40)
+//                            .padding(.bottom, 20)
+//                        subscription.icon
+//                    }
+//                    
+//                    Text(subscription.name)
+//                        .font(.setCustom(fontStyle: .body, fontWeight: .medium))
+//                    Text(subscription.amount)
+//                        .font(.setCustom(fontStyle: .body, fontWeight: .semibold))
+//                    Divider()
+//                        .background(Color.divider)
+//                    Text(subscription.date)
+//                        .font(.setCustom(fontStyle: .caption, fontWeight: .medium))
+//                        .foregroundColor(Color.customDarkGray)
+//                }
+//            }
+//            .padding(10)
+//        }
+//        .frame(width: 124, height: 152)
+//        .padding(2)
+//        .background(Color.white)
+//        .cornerRadius(12)
+//        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+//    }
+//}
     var body: some View {
-        VStack {
+        ZStack {
             VStack {
                 if subscription.name.lowercased().contains("view all") {
                     HStack {
@@ -37,32 +76,53 @@ struct PaymentCardView: View {
                     ZStack(alignment: .bottom) {
                         RoundedRectangle(cornerRadius: 8)
                             .fill(getSubscriptionColor())
-                            .frame(width: 110, height: 40)
+                            .frame(width: 108, height: 32)
                             .padding(.bottom, 20)
                         subscription.icon
                     }
-                    
-                    Text(subscription.name)
-                        .font(.setCustom(fontStyle: .body, fontWeight: .medium))
-                    Text(subscription.amount)
-                        .font(.setCustom(fontStyle: .body, fontWeight: .semibold))
+                    VStack(spacing: 2) {
+                        Text(subscription.name)
+                            .font(.setCustom(fontStyle: .body, fontWeight: .medium))
+                            .padding(.horizontal, 10)
+                        Text(subscription.amount)
+                            .font(.setCustom(fontStyle: .body, fontWeight: .semibold))
+                    }
+                    .foregroundColor(Color.textPrimary)
+                    .padding(.top, 1)
                     Divider()
                         .background(Color.divider)
+                        .padding(.vertical, -1)
+                        .padding(.top, -3)
                     Text(subscription.date)
                         .font(.setCustom(fontStyle: .caption, fontWeight: .medium))
                         .foregroundColor(Color.customDarkGray)
                 }
             }
             .padding(10)
+            
+            // Banner
+            if subscription.isFreeTrial {
+                VStack {
+                    Text("Free Trial")
+                        .font(.setCustom(fontStyle: .caption, fontWeight: .medium))
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 35)
+                        .background(Color.notifyRed)
+                        .rotationEffect(.degrees(-30))
+                        .offset(x: -29, y: -55)
+                }
+            }
         }
         .frame(width: 124, height: 152)
-        .padding(2)
+//        .padding(2)
         .background(Color.white)
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.03), radius: 5, x: 0, y: 2)
     }
 }
 
 #Preview {
-    PaymentCardView(subscription: subscriptions[0])
+    PaymentCardView(subscription: subscriptions[2])
 }

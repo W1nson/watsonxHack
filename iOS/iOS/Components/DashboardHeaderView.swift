@@ -31,6 +31,7 @@ struct TitleView: View {
             VStack(alignment: .leading) {
                 Text("Good Morning")
                     .font(.setCustom(fontStyle: .largeTitle, fontWeight: .semibold))
+                    .padding(.bottom, 0.5)
                 Text(Date.now, style: .date)
                     .font(.setCustom(fontStyle: .title2, fontWeight: .medium))
             }
@@ -47,11 +48,23 @@ struct IconView: View {
             HStack(spacing: 16) {
                 Image("account_circle")
                     .resizable()
-                    .frame(width: 30, height: 30)
+                    .frame(width: 24, height: 24)
                     .padding(.trailing, 5)
-                Image("notifications")
-                    .resizable()
-                    .frame(width: 30, height: 30)
+
+                ZStack(alignment: .topTrailing) {
+                    Image("notifications")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                    
+                    // The badge view
+                    Text("4")
+                        .font(.setCustom(fontStyle: .caption, fontWeight: .medium))
+                        .foregroundColor(.white)
+                        .padding(5)
+                        .background(Color.notifyRed)
+                        .clipShape(Circle())
+                        .offset(x: 4, y: -8)
+                }
             }
         }
         .padding(.horizontal)
