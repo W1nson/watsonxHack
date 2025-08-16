@@ -8,6 +8,7 @@ from util import get_current_date, get_user_sub, format_table
 from prompt import SYSTEM_PROMPT
 from state import State
 from pydantic import BaseModel, Field
+from typing import Literal
 
 import os 
 import json 
@@ -22,7 +23,8 @@ class ResponseFormatter(BaseModel):
     followup_question: str = Field(description="A followup question the user could ask, such as asking for more suggestions")
     recommendation: list[str] = Field(description="Suggestions that could potentially solve user's question", min_length=1, max_length=2)
 
-
+class UserIntent(BaseModel):
+    intent: Literal['structure', 'conversation'] = Field(description="The intent of the user")
 
 
 # Load environment variables
@@ -48,6 +50,16 @@ llm_with_tools = llm.bind_tools(tools, tool_choice="tavily_search")
 
 
 
+def get_user_intent(state: State): 
+    intent_prompt = """You are a user intent detector. If the user asks about subscription costs, cancellations, or savings, respond in structured JSON format with recommendations.
+Otherwise, respond in natural conversational style.
+User message: {message}"""
+    
+    prompt = intent_prompt.format(message = state["messages"][-1].content)
+    intent_llm = llm.with_structured_output(UserIntent)    
+    output = intent_llm.invoke(prompt)
+    print(output.intent)
+    return {'user_intent': output.intent}
 
 # Define the chatbot node where this chatbot will be the main entry point of the graph
 def chatbot(state: State):
@@ -140,11 +152,13 @@ memory = InMemorySaver()
 
 # Building the graph 
 graph_builder = StateGraph(State)
+graph_builder.add_node("get_user_intent", get_user_intent)
 graph_builder.add_node("chatbot", chatbot)
 graph_builder.add_node("tools", tool_node)
 graph_builder.add_node("mark_done", set_looked_up)
 
-graph_builder.add_edge(START, "chatbot")
+graph_builder.add_edge(START, "get_user_intent")
+graph_builder.add_edge("get_user_intent", "chatbot")
 # graph_builder.add_edge("tools", "chatbot")
 graph_builder.add_edge("tools", "mark_done")
 graph_builder.add_edge("mark_done", "chatbot")

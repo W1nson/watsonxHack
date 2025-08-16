@@ -20,6 +20,7 @@ class ChatResponse(BaseModel):
     reason: str
     answer: str
     followup_question: str
+    intent: str
 
 messages = []
 
@@ -41,10 +42,11 @@ def chat_endpoint(req: ChatRequest):
     output = agent.invoke({"messages": [{"role": "user", "content": req.user_input}], "lookuped": False}, config)
     response = [Message(role="assistant" if isinstance(message, AIMessage) else "user", content=message.content) for message in output["messages"]]
 
-   
+    print(output['user_intent'])
     print(output['messages'][-1].content)
     print(output['structured_output'])
-    out = {"response": response}
+    
+    out = {"response": response, 'intent': output['user_intent']}
     out.update(output['structured_output'])
     return out
     

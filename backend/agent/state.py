@@ -1,7 +1,8 @@
-from typing import Annotated
+from typing import Annotated, Literal
 from typing_extensions import TypedDict
 from langgraph.graph.message import add_messages
 import operator 
+
 
 # Define the state of the chatbot
 class State(TypedDict):
@@ -15,7 +16,7 @@ class State(TypedDict):
     deals_table: str
     looked_up: bool
     structured_output: dict
-
+    user_intent: Literal['structure', 'conversation']
 
 
 

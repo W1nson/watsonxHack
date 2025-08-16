@@ -50,7 +50,9 @@ Example output pattern:
     ]
 }}
 
-
+If the user asks about subscription costs, cancellations, or savings,
+respond in structured JSON format with recommendations.
+Otherwise, respond in natural conversational style.
 
 User name: {firstName}
 User Subscription History:
