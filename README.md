@@ -5,18 +5,10 @@ The **SpendWise** app helps users take control of their finances by centralizing
 [<img src="https://github.com/user-attachments/assets/03c66f84-ce33-47ce-9c82-7988e8d60f64" width="250"/>](https://github.com/user-attachments/assets/03c66f84-ce33-47ce-9c82-7988e8d60f64)
 
 ## AI Features
-#### Recommend Subscriptions
-- Scenario: A user wonders if there are better subscription options than the ones they currently have.
-- Solution: AI recommends subscriptions based on the user’s subscription information.
-#### Ask About Subscriptions
-- Scenario: A user wants to know whether their T-Mobile plan includes free subscriptions.
-- Solution: The AI answers and responds to subscription-related questions.
-#### Compare Subscriptions
-- Scenario: A user is looking for better alternatives to their current subscriptions.
-- Solution: The AI compares available options based on user needs and subscription information.
-#### Save Money
-- Scenario: A user is unsure how to save money and optimize their active subscriptions.
-- Solution: The AI suggests cost-saving actions, provides reasoning, and offers actionable buttons for guidance.
+- **Recommend Subscriptions**: AI recommends subscriptions based on the user’s subscription information.
+- **Ask About Subscriptions**: The AI answers and responds to subscription-related questions.
+- **Compare Subscriptions**: The AI compares available options based on user needs and subscription information.
+- **Save Money**: The AI suggests cost-saving actions, provides reasoning, and offers actionable buttons for guidance.
 
 ## Getting Started
 ### Prerequisites
@@ -47,7 +39,7 @@ open iOS.xcodeproj
 5. Build and run the application on your iOS simulator.
 
 ## Usage
-The application's AI agent, powered by Watsonx AI, utilizes a RAG system where it loads user information to enhance the AI's ability to provide more personalized and relevant responses. You can interact with the agent by navigating to the "Jarvis AI" button in the right-hand corner. From there, you can choose from the recommended questions or type in your own. The AI will process your input and respond based on the data it has access to. Feel free to explore different scenarios to see how the AI adapts its responses.
+Spendwise's AI agent, powered by Watsonx AI, utilizes a RAG system where it loads user information to enhance the AI's ability to provide more personalized and relevant responses. You can interact with the agent by navigating to the "Jarvis AI" button in the right-hand corner. From there, you can choose from the recommended questions or type in your own. The AI will process your input and respond based on the data it has access to. Feel free to explore different scenarios to see how the AI adapts its responses.
 
 ## Acknowledgments
 - Watsonx AI: For providing the models that power the AI agent.
