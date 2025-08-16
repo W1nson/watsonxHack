@@ -58,7 +58,7 @@ class ChatViewModel: ObservableObject {
 
 
         // Append as if the user typed it
-        let userMessage = ChatMessage(text: text, isUser: true, timestamp: Date(), avatar: "person.circle.fill")
+        let userMessage = ChatMessage(text: text, isUser: true, timestamp: Date(), avatar: "")
         messages.append(userMessage)
         isLoading = true
 
@@ -70,7 +70,7 @@ class ChatViewModel: ObservableObject {
                 }
             } catch {
                 DispatchQueue.main.async {
-                    self.messages.append(ChatMessage(text: "Error: \(error.localizedDescription)", isUser: false, timestamp: Date(), avatar: "brain.head.profile"))
+                    self.messages.append(ChatMessage(text: "Error: \(error.localizedDescription)", isUser: false, timestamp: Date(), avatar: ""))
                     self.isLoading = false
                 }
             }

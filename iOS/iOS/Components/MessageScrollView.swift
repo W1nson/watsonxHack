@@ -23,6 +23,8 @@ struct MessageScrollView: View {
     let isLoading: Bool
     let onSuggestionTap: ((String) -> Void)?
     
+    private let thinkingID = UUID()
+
     init(
         messages: [ChatMessage],
         isLoading: Bool,
@@ -32,7 +34,7 @@ struct MessageScrollView: View {
         self.isLoading = isLoading
         self.onSuggestionTap = onSuggestionTap
     }
-    
+
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -40,6 +42,7 @@ struct MessageScrollView: View {
                     ForEach(messages.indices, id: \.self) { index in
                         let previousMessage = index > 0 ? messages[index - 1] : nil
                         MessageRowView(message: messages[index], previousMessage: previousMessage, onSuggestionTap: onSuggestionTap)
+                            .id(messages[index].id)
                     }
 
                     if isLoading {
@@ -48,13 +51,24 @@ struct MessageScrollView: View {
                             Text("Thinking...")
                                 .font(.setCustom(fontStyle: .body, fontWeight: .regular))
                         }
+                        .id(thinkingID) 
                     }
                 }
                 .padding()
             }
-            .onChange(of: messages.count) {
-                withAnimation {
-                    proxy.scrollTo(messages.last?.id, anchor: .bottom)
+            .onChange(of: isLoading) {
+                // Scroll to the thinking indicator whenever isLoading becomes true
+                if isLoading {
+                    withAnimation {
+                        proxy.scrollTo(thinkingID, anchor: .bottom)
+                    }
+                } else if let lastMessageId = messages.last?.id {
+                    // Scroll to the last message when thinking is done
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            proxy.scrollTo(lastMessageId, anchor: .bottom)
+                        }
+                    }
                 }
             }
         }
@@ -246,8 +260,8 @@ struct MessageScrollView_Previews: PreviewProvider {
             ChatMessage(text: greetingString, isUser: false, timestamp: Date().addingTimeInterval(-120), avatar: "Avatar-jarvis"),
             ChatMessage(text: recommandatiaons, isUser: false, timestamp: Date().addingTimeInterval(-90), avatar: "", isRec: true),
             ChatMessage(text: "Can you tell me how to budget?", isUser: true, timestamp: Date().addingTimeInterval(-60), avatar: ""),
-//            ChatMessage(text: markdownString2, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"),
-            ChatMessage(text: markdownString, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis")
+            ChatMessage(text: markdownString2, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"),
+//            ChatMessage(text: markdownString, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis")
         ]
         
         MessageScrollView(messages: sampleMessages, isLoading: false)
