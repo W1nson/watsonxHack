@@ -23,6 +23,7 @@ struct ChatAPIResponse: Codable {
     let answer: String
     let followup_question: String
     let reason: String
+    let intent: String
 }
 
 
@@ -123,40 +124,56 @@ class ChatViewModel: ObservableObject {
         
         print(api.recommendation)
         print(api.answer)
-        // 1) ANSWER bubble (plain text)
-        var answerText: String? = nil
-        if !api.reason.isEmpty {
-            answerText = api.reason
-//        } else if let lastAssistant = api.response.last(where: { $0.role.lowercased() == "assistant" }) {
-//            answerText = lastAssistant.content
-        }
-        if let answerText {
-            DispatchQueue.main.async {
-                self.messages.append(ChatMessage(text: answerText, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"))
+        print(api.response)
+        
+        
+        if api.intent == "structure" {
+            // 1) ANSWER bubble (plain text)
+            var answerText: String? = nil
+            if !api.reason.isEmpty {
+                answerText = api.reason
+    //        } else if let lastAssistant = api.response.last(where: { $0.role.lowercased() == "assistant" }) {
+    //            answerText = lastAssistant.content
             }
-        }
-
-        // 2) RECOMMENDATIONS bubble (tagged for button UI)
-        if !api.recommendation.isEmpty {
-            let recs = api.recommendation
-            for rec in recs {
-                print("rec: \(rec)")
+            if let answerText {
                 DispatchQueue.main.async {
-                    self.messages.append(ChatMessage(text: rec, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis", isRec: true))
+                    self.messages.append(ChatMessage(text: answerText, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"))
                 }
             }
-            
-            
-        }
 
-        // 3) FOLLOW-UP bubble (plain text)
-        if !api.followup_question.isEmpty {
-//            let follows = api.follow_up
-            let followText = api.followup_question
-            DispatchQueue.main.async {
-                self.messages.append(ChatMessage(text: followText, isUser: false, timestamp: Date(), avatar: ""))
+            // 2) RECOMMENDATIONS bubble (tagged for button UI)
+            if !api.recommendation.isEmpty {
+                let recs = api.recommendation
+                for rec in recs {
+                    print("rec: \(rec)")
+                    DispatchQueue.main.async {
+                        self.messages.append(ChatMessage(text: rec, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis", isRec: true))
+                    }
+                }
+                
+                
+            }
+
+            // 3) FOLLOW-UP bubble (plain text)
+            if !api.followup_question.isEmpty {
+    //            let follows = api.follow_up
+                let followText = api.followup_question
+                DispatchQueue.main.async {
+                    self.messages.append(ChatMessage(text: followText, isUser: false, timestamp: Date(), avatar: ""))
+                }
             }
         }
+        else {
+            if !api.response.isEmpty {
+                let resText = api.response[api.response.count-1].content
+                DispatchQueue.main.async {
+                    self.messages.append(ChatMessage(text: resText, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"))
+                }
+            }
+
+        }
+
+       
 
         // Return last non-empty piece for testing
         return self.messages.last?.text ?? ""
