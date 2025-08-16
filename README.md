@@ -1,4 +1,9 @@
-# Overview
+# SpendWise App
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009485.svg?style=for-the-badge&logo=fastapi&logoColor=white)
+![Swift](https://img.shields.io/badge/swift-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
+![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)
+## Overview
 The **SpendWise** app helps users take control of their finances by centralizing subscription management into one intuitive platform. By securely connecting multiple bank accounts, users can track upcoming payments, view active subscriptions, and monitor transactions in real time. Powered by Agentic AI, the app delivers actionable recommendations and answers user questions directly, empowering smarter financial decisions, reducing unnecessary spending, and building confidence in money management.
 
 [<img src="https://github.com/user-attachments/assets/e4bf52d2-1da3-467b-9dc9-73aa456597f3" width="250"/>](https://github.com/user-attachments/assets/e4bf52d2-1da3-467b-9dc9-73aa456597f3)
