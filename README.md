@@ -1,7 +1,8 @@
 # Overview
-
-
 The **SpendWise** app helps users take control of their finances by centralizing subscription management into one intuitive platform. By securely connecting multiple bank accounts, users can track upcoming payments, view active subscriptions, and monitor transactions in real time. Powered by Agentic AI, the app delivers actionable recommendations and answers user questions directly, empowering smarter financial decisions, reducing unnecessary spending, and building confidence in money management.
+
+[<img src="https://github.com/user-attachments/assets/e4bf52d2-1da3-467b-9dc9-73aa456597f3" width="250"/>](https://github.com/user-attachments/assets/e4bf52d2-1da3-467b-9dc9-73aa456597f3)
+[<img src="https://github.com/user-attachments/assets/03c66f84-ce33-47ce-9c82-7988e8d60f64" width="250"/>](https://github.com/user-attachments/assets/03c66f84-ce33-47ce-9c82-7988e8d60f64)
 
 ## AI Features
 #### Recommend Subscriptions
@@ -43,8 +44,11 @@ uvicorn main:app --reload --log-level debug
 ```bash
 open iOS.xcodeproj
 ```
-5. Build and run the application on your iOS device or simulator.
+5. Build and run the application on your iOS simulator.
+
+## Usage
+The application's AI agent, powered by Watsonx AI, utilizes a RAG system where it loads user information to enhance the AI's ability to provide more personalized and relevant responses. You can interact with the agent by navigating to the "Jarvis AI" button in the right-hand corner. From there, you can choose from the recommended questions or type in your own. The AI will process your input and respond based on the data it has access to. Feel free to explore different scenarios to see how the AI adapts its responses.
 
 ## Acknowledgments
 - Watsonx AI: For providing the models that power the AI agent.
-- SwiftUI: For enabling modern UI development on iOS.
+- SwiftUI: For a modern user interface for iOS.
