@@ -82,7 +82,7 @@ class ChatViewModel: ObservableObject {
         let trimmed = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
-        let userMessage = ChatMessage(text: trimmed, isUser: true, timestamp: Date(), avatar: "person.circle.fill")
+        let userMessage = ChatMessage(text: trimmed, isUser: true, timestamp: Date(), avatar: "")
         messages.append(userMessage)
         inputText = ""
         isLoading = true
@@ -95,7 +95,7 @@ class ChatViewModel: ObservableObject {
                 }
             } catch {
                 DispatchQueue.main.async {
-                    self.messages.append(ChatMessage(text: "Error: \(error.localizedDescription)", isUser: false, timestamp: Date(), avatar: "brain.head.profile"))
+                    self.messages.append(ChatMessage(text: "Error: \(error.localizedDescription)", isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"))
                     self.isLoading = false
                 }
             }

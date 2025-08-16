@@ -101,7 +101,7 @@ struct TransactionsView: View {
                     .foregroundStyle(Color.customPurple)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 15)
+            .padding(.vertical, 10)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.customPurple, lineWidth: 1)
