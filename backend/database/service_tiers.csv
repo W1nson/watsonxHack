@@ -1,5 +1,0 @@
-id,service_id,tier_name,billing_period,price_usd,max_seats,ads_free,trial_days
-1,1,Standard with Ads,monthly,6.99,2,False,0
-2,1,Premium,monthly,19.99,4,True,30
-3,2,Individual,monthly,10.99,1,True,30
-4,3,Family,yearly,129.99,6,True,30

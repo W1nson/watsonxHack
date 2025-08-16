@@ -19,15 +19,16 @@ struct ChatAPIMessage: Codable {
 
 struct ChatAPIResponse: Codable {
     let response: [ChatAPIMessage]
-    let recommendations: [String]
-    let answer: [String]
-    let follow_up: [String]
+    let recommendation: [String]
+    let answer: String
+    let followup_question: String
+    let reason: String
 }
 
 
 class ChatViewModel: ObservableObject {
     @Published var messages: [ChatMessage] = [
-            ChatMessage(text: "Hi Alice, Here are some things I can help with:", isUser: false, timestamp: Date().addingTimeInterval(-3600), avatar: "Avatar-jarvis"),
+            ChatMessage(text: "Hi James, Here are some things I can help with:", isUser: false, timestamp: Date().addingTimeInterval(-3600), avatar: "Avatar-jarvis"),
             ChatMessage(text: "Recommend Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
             ChatMessage(text: "Ask About Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
             ChatMessage(text: "Compare Subscriptions", isUser: false, timestamp: Date().addingTimeInterval(-300), avatar: "", isSug: true),
@@ -56,7 +57,7 @@ class ChatViewModel: ObservableObject {
 
 
         // Append as if the user typed it
-        let userMessage = ChatMessage(text: prompt, isUser: true, timestamp: Date(), avatar: "person.circle.fill")
+        let userMessage = ChatMessage(text: text, isUser: true, timestamp: Date(), avatar: "person.circle.fill")
         messages.append(userMessage)
         isLoading = true
 
@@ -100,7 +101,7 @@ class ChatViewModel: ObservableObject {
         }
     }
 
-    private func fetchReply(for userInput: String, userId: String = "2") async throws -> String {
+    private func fetchReply(for userInput: String, userId: String = "1") async throws -> String {
         // Building the backend URL
         guard let url = URL(string: endpoint) else { throw URLError(.badURL) }
 
@@ -120,11 +121,12 @@ class ChatViewModel: ObservableObject {
         let decoder = JSONDecoder()
         let api = try decoder.decode(ChatAPIResponse.self, from: data)
         
-        print(api.recommendations)
+        print(api.recommendation)
+        print(api.answer)
         // 1) ANSWER bubble (plain text)
         var answerText: String? = nil
-        if !api.answer.isEmpty {
-            answerText = api.answer.joined(separator: " ")
+        if !api.reason.isEmpty {
+            answerText = api.reason
 //        } else if let lastAssistant = api.response.last(where: { $0.role.lowercased() == "assistant" }) {
 //            answerText = lastAssistant.content
         }
@@ -135,8 +137,8 @@ class ChatViewModel: ObservableObject {
         }
 
         // 2) RECOMMENDATIONS bubble (tagged for button UI)
-        if !api.recommendations.isEmpty {
-            let recs = api.recommendations
+        if !api.recommendation.isEmpty {
+            let recs = api.recommendation
             for rec in recs {
                 print("rec: \(rec)")
                 DispatchQueue.main.async {
@@ -148,11 +150,11 @@ class ChatViewModel: ObservableObject {
         }
 
         // 3) FOLLOW-UP bubble (plain text)
-        if !api.follow_up.isEmpty {
+        if !api.followup_question.isEmpty {
 //            let follows = api.follow_up
-            let followText = api.follow_up.joined(separator: " ")
+            let followText = api.followup_question
             DispatchQueue.main.async {
-                self.messages.append(ChatMessage(text: followText, isUser: false, timestamp: Date(), avatar: "Avatar-jarvis"))
+                self.messages.append(ChatMessage(text: followText, isUser: false, timestamp: Date(), avatar: ""))
             }
         }
 

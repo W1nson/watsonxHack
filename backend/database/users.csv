@@ -1,4 +1,2 @@
-id,email,firstName,lastName,phoneNumber
-1,alice@example.com,Alice,Smith,1234567890
-2,bob@example.com,Bob,Jones,9876543210
-3,carol@example.com,Carol,Taylor,5551234567
+user_id,NameFirst,NameLast ,Email,Phone
+1,James,Conner,jconner@gmail.com,(123)456-7890

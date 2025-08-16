@@ -1,33 +1,32 @@
-from langgraph.prebuilt import create_react_agent
-from langchain_ollama import ChatOllama
-from utils import stream_to_console
-from tools import get_weather, get_current_earthquake, get_current_date
-# from prompts import disaster_advisor_instructions
-from llm import watsonx_model
+import uuid
+import logging
+from new_graph import agent
+from langchain_core.messages import HumanMessage
 
-agent = create_react_agent(
-    model=ChatOllama(model="granite3.3:latest"),
-    tools=[get_weather, get_current_earthquake, get_current_date],
-    prompt=disaster_advisor_instructions,
-)
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# agent = create_react_agent(
-#     model=watsonx_model,
-#     tools=[get_weather, get_current_earthquake, get_current_date],
-#     prompt=disaster_advisor_instructions,
-# )
+# Generate a unique thread ID for the conversation
+thread_id = str(1)
 
-def run_agent(user_input):
+def run_agent(user_id: int):
     """
-    Streams agent responses for a given user input.
-    Yields each message chunk for FastAPI StreamingResponse.
+    Runs the conversational agent.
     """
-    # stream_to_console(agent, {"messages": [{"role": "user", "content": user_input}]})
-    for chunk, metadata in agent.stream({"messages": [{"role": "human", "content": user_input}]}, stream_mode="messages"):
-        if chunk.content:
-            # print(chunk.content, end="", flush=True)
-            yield chunk.content
+    config = {"configurable": {"thread_id": thread_id}}
+    logging.info(f"Starting agent with config: {config}")
+    
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == 'exit':
+            break
 
-if __name__ == "__main__":
-    run_agent("Who are you?")
+        logging.info(f"User input: {user_input}")
+        # The input to the agent is a dictionary with the user_id and the message.
+        # The message is a list of HumanMessage objects.
+        for chunk in agent.stream({"user_id": user_id, "messages": [HumanMessage(content=user_input)]}, config=config, stream_mode='debug'):
+            print(chunk)
         
+if __name__ == "__main__":
+    # You can change the user_id to test with different users.
+    run_agent(user_id=1)

@@ -1,6 +1,11 @@
-id,user_id,tier_id,start_date,renewal_frequency,auto_renew,current_status,last_billed_date,next_renewal_date,amount_billed,currency
-1,1,1,2023-01-08,monthly,True,active,2023-02-07,2023-03-09,6.99,USD
-2,2,1,2023-01-11,monthly,False,cancelled,2023-02-10,2023-03-12,6.99,USD
-3,3,2,2023-01-07,monthly,False,cancelled,2023-02-06,2023-03-08,19.99,USD
-4,3,1,2023-01-11,monthly,True,cancelled,2023-02-10,2023-03-12,6.99,USD
-5,3,1,2023-01-20,monthly,False,active,2023-02-19,2023-03-21,6.99,USD
+sub_id,Service_id,Tier,Amount,Catergory,Frequency,Renewal date,Provider,Bank,Last four,Credict Card expiring soon,Activity in 6 months
+1,Neflix,Standard,17.99,Streaming,monthly,9/10/2025,User,Chase,5674,FALSE,TRUE
+2,Spotify,Premium,11.99,Music,monthly,9/11/2025,User,Chase,5674,FALSE,TRUE
+3,Google One,Premium,9.99,Productivity,monthly,8/24/2025,User,Bank of America,8201,TRUE,TRUE
+4,Play Station,Plus,99.99,Entertainment,annually,8/23/2025,User,Chase,5674,FALSE,TRUE
+5,Kindle,Unlimited,11.99,Entertainment,monthly,9/1/2025,User,Bank of America,8201,TRUE,TRUE
+6,T-Mobile,Go5G Plus,150,Utility,monthly,9/4/2025,User,Chase,5674,FALSE,TRUE
+7,Pokémon HOME,Premium,4.99,Entertainment,monthly,8/20/2025,User,Chase,5674,FALSE,FALSE
+8,Planet Fitness,Classic,15,Health & Fitness,monthly,9/3/2025,User,Chase,5674,FALSE,TRUE
+9,iCloud,200mb,2.99,Utility,monthly,9/1/2025,User,Bank of America,8201,TRUE,TRUE
+10,HelloFresh,Meal Kit,85.93,Food & Drink,Weekly,9/4/2025,User,Chase,5674,FALSE,TRUE
